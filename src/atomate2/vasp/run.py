@@ -84,6 +84,8 @@ def run_vasp(
     handlers: Sequence[ErrorHandler] = DEFAULT_HANDLERS,
     validators: Sequence[Validator] = _DEFAULT_VALIDATORS,
     wall_time: int | None = None,
+    buffer_time: int = 300,
+    electronic_step_stop: bool = False,
     vasp_job_kwargs: dict[str, Any] = None,
     custodian_kwargs: dict[str, Any] = None,
 ) -> None:
@@ -146,7 +148,7 @@ def run_vasp(
         raise ValueError(f"Unsupported {job_type=}")
 
     if wall_time is not None:
-        handlers = [*handlers, WalltimeHandler(wall_time=wall_time)]
+        handlers = [*handlers, WalltimeHandler(wall_time=wall_time,buffer_time=buffer_time,electronic_step_stop=electronic_step_stop)]
 
     custodian_manager = Custodian(
         handlers,
